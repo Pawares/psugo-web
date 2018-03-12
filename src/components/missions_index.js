@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { fetchMissions } from '../actions'
 import _ from 'lodash'
 import NavBar from './NavBar'
@@ -28,6 +29,9 @@ class MissionsIndex extends Component {
         return (
             <div>
                 <NavBar />
+                <div className="text-right">
+                    <Link className="btn btn-primary" to="/missions/new">Add a Mission</Link>
+                </div>
                 <h3>Missions</h3>
                 <ul className="list-group">
                     {this.renderMissions()}
