@@ -41,6 +41,4 @@ function mapStateToProps({ missions }) {
     return { missions }
 }
 
-// { fetchMissions } === mapDispatchToProps()
-
 export default connect(mapStateToProps, { fetchMissions })(MissionsIndex)
