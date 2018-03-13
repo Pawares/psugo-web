@@ -3,11 +3,10 @@ import _ from 'lodash'
 
 export default function(state = {}, action) {
     switch (action.type) {
-        case FETCH_MISSIONS: return _.mapKeys(action.payload, 'id')
-        case CREATE_MISSION: return state
-        case FETCH_MISSION: return { ...state, [action.payload.id] : _.mapKeys(action.payload, 'id')}
-        // case FETCH_MISSION: return { ...state, [action.payload.id] : _.mapKeys(action.payload, 'id')}
-        case DELETE_MISSION: return _.omit(state, [action.payload])
+        case FETCH_MISSIONS: return {...state, [action.id]: action.payload} 
+        case CREATE_MISSION: return {...state, [action.id]: action.payload} 
+        case FETCH_MISSION: return {...state, [action.id]: action.payload}
+        case DELETE_MISSION: return _.omit(state, [action.id])
         default: return state
     }
 }

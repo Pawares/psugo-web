@@ -13,11 +13,12 @@ class MissionsIndex extends Component {
 
     renderMissions() {
         return (
-            _.map(this.props.missions, mission => {
+            
+            _.map(this.props.missions, (mission, key) => {
                 return (
-                    <li className="list-group-item" key={mission.id}>
-                    <Link to={`/missions/${mission.id}`}>
-                    {mission.data.name}
+                    <li className="list-group-item" key={key}>
+                    <Link to={`/missions/${key}`}>
+                    {mission.name}
                     </Link>
                     </li>
                 )
@@ -26,9 +27,9 @@ class MissionsIndex extends Component {
     }
 
     render() {
-        console.log(this.props.missions)
+        // console.log(this.props.missions)
         if (!this.props.missions) {
-            return <div>Loading</div>
+            return <div>Loading...</div>
         }
         return (
             <div>
@@ -50,5 +51,4 @@ class MissionsIndex extends Component {
 function mapStateToProps({ missions }) {
     return { missions }
 }
-
 export default connect(mapStateToProps, { fetchMissions })(MissionsIndex)
