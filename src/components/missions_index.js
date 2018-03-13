@@ -15,7 +15,11 @@ class MissionsIndex extends Component {
         return (
             _.map(this.props.missions, mission => {
                 return (
-                    <li className="list-group-item" key={mission.id}>{mission.data.name}</li>
+                    <li className="list-group-item" key={mission.id}>
+                    <Link to={`/missions/${mission.id}`}>
+                    {mission.data.name}
+                    </Link>
+                    </li>
                 )
             })
         )

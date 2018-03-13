@@ -5,11 +5,12 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 
+import './styles/stylesheet.css'
 import App from './components/App';
 import MissionsIndex from './components/missions_index'
 import MissionsNew from './components/missions_new'
+import MissionsShow from './components/missions_show'
 import rootReducer from './reducers'
-import { firestore } from './database/config'
 
 const store = createStore(
     rootReducer, 
@@ -22,7 +23,8 @@ ReactDOM.render(
         <BrowserRouter>
             <div>
                 <Switch>
-                    <Route path="/missions/new" component={MissionsNew} />
+                    <Route path="/missions/new" component={MissionsNew} /> 
+                    <Route path="/missions/:id" component={MissionsShow} />
                     <Route path="/missions" component={MissionsIndex} />
                     <Route exact path="/" component={App} />
                 </Switch>

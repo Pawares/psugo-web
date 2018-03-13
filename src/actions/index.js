@@ -1,8 +1,8 @@
 import { firestore } from '../database/config'
-import _ from 'lodash'
 
-export const FETCH_MISSIONS = 'fetch_missions'
-export const CREATE_MISSION = 'create_mission'
+export const FETCH_MISSIONS = 'FETCH_MISSIONS'
+export const CREATE_MISSION = 'CREATE_MISSION'
+export const FETCH_MISSION = 'FETCH_MISSION'
 
 export function fetchMissions() {
     return (dispatch) => {
@@ -39,6 +39,34 @@ export function createMission(mission, callback) {
         })
         .catch((error) => {
             console.error("Error adding document: ", error)
+        })
+    }
+}
+
+export function fetchMission(id) {
+    return (dispatch) => {
+        firestore.collection('missions').doc(id).get()
+        .then((doc) => {
+            if (doc.exists) {
+                let mission = []
+                // console.log("Document data:", doc.data());
+                mission.push({
+                    id: id,
+                    data: doc.data()
+                })
+
+                dispatch({
+                    type: FETCH_MISSION,
+                    payload: mission
+                })
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        })
+        .catch((error) => {
+            console.log("Error getting document:", error);
+
         })
     }
 }
