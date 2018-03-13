@@ -3,6 +3,7 @@ import { firestore } from '../database/config'
 export const FETCH_MISSIONS = 'FETCH_MISSIONS'
 export const CREATE_MISSION = 'CREATE_MISSION'
 export const FETCH_MISSION = 'FETCH_MISSION'
+export const DELETE_MISSION = 'DELETE_MISSION'
 
 export function fetchMissions() {
     return (dispatch) => {
@@ -70,4 +71,20 @@ export function fetchMission(id) {
         })
     }
 }
-                
+               
+export function deleteMission(id, callback) {
+    return (dispatch) => {
+        firestore.collection('missions').doc(id).delete()
+        .then(() => {
+            console.log("Document successfully deleted!")
+            dispatch({
+                type: DELETE_MISSION,
+                payload: id
+            })
+            callback()
+        })
+        .catch((error) => {
+            console.error("Error removing document: ", error)
+        })
+    }
+}
