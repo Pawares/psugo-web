@@ -15,7 +15,7 @@ class MissionsIndex extends Component {
         return (
             _.map(this.props.missions, mission => {
                 return (
-                    <li className="list-group-item" key={mission.id} >{mission.data.name}</li>
+                    <li className="list-group-item" key={mission.id}>{mission.data.name}</li>
                 )
             })
         )
@@ -29,13 +29,15 @@ class MissionsIndex extends Component {
         return (
             <div>
                 <NavBar />
-                <div className="text-right">
-                    <Link className="btn btn-primary" to="/missions/new">Add a Mission</Link>
+                <div className="container">
+                    <div className="text-right">
+                        <Link className="btn btn-primary" to="/missions/new">Add a Mission</Link>
+                    </div>
+                    <h3>Missions</h3>
+                    <ul className="list-group">
+                        {this.renderMissions()}
+                    </ul>
                 </div>
-                <h3>Missions</h3>
-                <ul className="list-group">
-                    {this.renderMissions()}
-                </ul>
             </div>
         )
     }
