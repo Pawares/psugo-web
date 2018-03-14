@@ -36,7 +36,7 @@ class MissionsIndex extends Component {
                 <NavBar />
                 <div className="container">
                     <div className="text-right">
-                        <Link className="btn btn-primary" to="/missions/new">Add a Mission</Link>
+                        <Link className="btn btn-primary" to="/missions/new">Add Mission</Link>
                     </div>
                     <h3>Missions</h3>
                     <ul className="list-group">
