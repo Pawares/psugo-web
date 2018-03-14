@@ -33,9 +33,9 @@ class MissionsShow extends Component {
                     <div className="text-right">
                     <button className="btn btn-danger" onClick={this.onDeleteClick.bind(this)}>Delete Mission</button>
                     </div>
-                    <h3>Name: {mission.data.name}</h3>
-                    <h6>Categories: {mission.data.categories}</h6>
-                    <p> Statement: {mission.data.statement}</p>
+                    <h3>Name: {mission.name}</h3>
+                    <h6>Categories: {mission.categories}</h6>
+                    <p> Statement: {mission.statement}</p>
                 </div>
             </div>
         )

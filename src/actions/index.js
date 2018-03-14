@@ -8,19 +8,15 @@ export const DELETE_MISSION = 'DELETE_MISSION'
 export function fetchMissions() {
     return (dispatch) => {
         firestore.collection('missions').get().then((querySnapshot) => {
-            let missions = []
             querySnapshot.forEach((doc) => {
                 // console.log(doc.id, " => ", doc.data());
-                missions.push({
+                dispatch({
+                    type: FETCH_MISSIONS,
                     id: doc.id,
-                    data: doc.data()
+                    payload: doc.data()
                 })
-                
             })
-            dispatch({
-                type: FETCH_MISSIONS,
-                payload: missions
-            })
+            
         }).catch((error) => {
             console.log(error)
         })
@@ -34,7 +30,8 @@ export function createMission(mission, callback) {
             console.log("Document written with ID: ", docRef.id)
             dispatch({
                 type: CREATE_MISSION,
-                payload: mission 
+                id: docRef.id,
+                payload: mission
             })
             callback()
         })
@@ -49,16 +46,11 @@ export function fetchMission(id) {
         firestore.collection('missions').doc(id).get()
         .then((doc) => {
             if (doc.exists) {
-                let mission = []
-                // console.log("Document data:", doc.data());
-                mission.push({
-                    id: id,
-                    data: doc.data()
-                })
-
+                console.log("Document data:", doc.data());
                 dispatch({
                     type: FETCH_MISSION,
-                    payload: mission
+                    id: id,
+                    payload: doc.data() 
                 })
             } else {
                 // doc.data() will be undefined in this case
@@ -79,7 +71,7 @@ export function deleteMission(id, callback) {
             console.log("Document successfully deleted!")
             dispatch({
                 type: DELETE_MISSION,
-                payload: id
+                id: id
             })
             callback()
         })
