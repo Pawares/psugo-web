@@ -62,9 +62,7 @@ class MissionsShow extends Component {
               Delete Mission
             </button>
           </div>
-          {/* <h3>Name: {mission.name}</h3>
-                    <h6>Categories: {mission.categories}</h6>
-                    <p> Statement: {mission.statement}</p> */}
+        
           <form
             onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
             className="was-validated"
