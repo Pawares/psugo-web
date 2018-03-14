@@ -1,4 +1,4 @@
-import { FETCH_MISSIONS, CREATE_MISSION, FETCH_MISSION, DELETE_MISSION} from '../actions/index'
+import { FETCH_MISSIONS, CREATE_MISSION, FETCH_MISSION, DELETE_MISSION, UPDATE_MISSION} from '../actions/index'
 import _ from 'lodash'
 
 export default function(state = {}, action) {
@@ -7,6 +7,7 @@ export default function(state = {}, action) {
         case CREATE_MISSION: return {...state, [action.id]: action.payload} 
         case FETCH_MISSION: return {...state, [action.id]: action.payload}
         case DELETE_MISSION: return _.omit(state, [action.id])
+        case UPDATE_MISSION: return {...state, [action.id]: action.payload}
         default: return state
     }
 }
