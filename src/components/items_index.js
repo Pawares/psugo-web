@@ -37,7 +37,7 @@ class ItemsIndex extends Component {
                 <NavBar />
                 <div className="container">
                 <div className="text-right">
-                    <Link to="items/new" className="btn btn-primary">Add Item</Link>
+                    <Link to="/items/new" className="btn btn-primary">Add Item</Link>
                 </div>
                     <h3>Items</h3>
                     <ul className="list-group">

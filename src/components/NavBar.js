@@ -5,7 +5,7 @@ class NavBar extends Component {
     render() {
         return (
             <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
-                <Link to="/" className="navbar-brand">PSU Go</Link>
+                <Link to="/" className="navbar-brand">PSU GO</Link>
                 <button className="navbar-toggler" data-toggle="collapse" data-target="#navbarMenu">
                     <span className="navbar-toggler-icon"></span>
                 </button>

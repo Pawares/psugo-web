@@ -11,6 +11,7 @@ import MissionsIndex from './components/missions_index'
 import MissionsNew from './components/missions_new'
 import MissionsShow from './components/missions_show'
 import ItemsIndex from './components/items_index'
+import ItemsNew from './components/items_new';
 import rootReducer from './reducers'
 
 const store = createStore(
@@ -24,6 +25,7 @@ ReactDOM.render(
         <BrowserRouter>
             <div>
                 <Switch>
+                    <Route path="/items/new" component={ItemsNew} />
                     <Route path="/items" component={ItemsIndex} />
                     <Route path="/missions/new" component={MissionsNew} /> 
                     <Route path="/missions/:id" component={MissionsShow} />
