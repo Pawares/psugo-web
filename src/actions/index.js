@@ -94,7 +94,7 @@ export function updateMission(id, data, callback) {
             callback()
         })
         .catch((error) => {
-            console.error("Error removing document: ", error)
+            console.error("Error updating document: ", error)
         })
     }
 }

@@ -5,6 +5,7 @@ export const FETCH_ITEMS = 'FETCH_ITEMS'
 export const CREATE_ITEM = 'CREATE_ITEM'
 export const FETCH_ITEM = 'FETCH_ITEM'
 export const DELETE_ITEM = 'DELETE_ITEM'
+export const UPDATE_ITEM = "UPDATE_ITEM"
 
 export function fetchItems() {
     return (dispatch) => {
@@ -80,5 +81,22 @@ export function deleteItem(id, callback) {
             console.log(error)
         })
     }
+}
 
+export function updateItem(id, data, callback) {
+    return (dispatch) => {
+        const parsedItem = parseToFireItem(data)
+        firestore.collection('items').doc(id).set(parsedItem)
+        .then(() => {
+            dispatch({
+                type: UPDATE_ITEM,
+                id: id,
+                payload: data
+            })
+            callback()
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
 }

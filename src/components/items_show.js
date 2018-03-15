@@ -2,29 +2,30 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Field, reduxForm } from 'redux-form'
-import { fetchItem, deleteItem } from '../actions/action_item'
+import { fetchItem, deleteItem, updateItem } from '../actions/action_item'
 import NavBar from '../components/NavBar'
 import { parseFromFireItem } from '../utils'
 
 class ItemsShow extends Component {
 
     componentWillMount() {
-        console.log("componentWillMount(): hit!")
         const { id } = this.props.match.params
         this.props.fetchItem(id)
     }
 
     onUpdateClick(values) {
-        console.log(values)
+        console.log("onUpdateClick: ", values)
+        const { id } = this.props.match.params
+        this.props.updateItem(id, values, () => {
+            console.log("Update Successful!")
+        })
     }
 
     onDeleteClick() {
-        console.log('onDelete clicked!')
         const { id } = this.props.match.params
         this.props.deleteItem(id, () => {
             this.props.history.push('/items')
         })
-
     }
 
     renderTextField(field) {
@@ -80,16 +81,15 @@ class ItemsShow extends Component {
                     <Link to="/items"> Back to Items</Link>
                     <div className="text-right"> 
                     <button 
-                    onClick={this.onDeleteClick.bind(this)}
-                    className="btn btn-danger"
+                        onClick={this.onDeleteClick.bind(this)}
+                        className="btn btn-danger"
                     >Delete
                     </button>
                     </div>
-                </div>
 
                 <form
                 onSubmit={handleSubmit(this.onUpdateClick.bind(this))} 
-                className="container was-validated">
+                className="was-validated">
 
                     <Field 
                     label="Latitude"
@@ -146,6 +146,7 @@ class ItemsShow extends Component {
               Undo Changes
             </button>
                 </form>
+                </div>
                 
             </div>
         )
@@ -197,7 +198,7 @@ function mapStateToProps({ items }, ownProps) {
     return { initialValues: parsedItem}
 }
 
-export default connect(mapStateToProps, { fetchItem, deleteItem })(
+export default connect(mapStateToProps, { fetchItem, deleteItem, updateItem })(
     reduxForm({
         form: "ItemsShowFrom",
         validate,
