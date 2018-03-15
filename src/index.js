@@ -12,7 +12,10 @@ import MissionsNew from './components/missions_new'
 import MissionsShow from './components/missions_show'
 import ItemsIndex from './components/items_index'
 import ItemsNew from './components/items_new';
+import ItemsShow from './components/items_show'
 import rootReducer from './reducers'
+
+// import {  fetchItems, fetchItem } from './actions/action_item'
 
 const store = createStore(
     rootReducer, 
@@ -26,6 +29,7 @@ ReactDOM.render(
             <div>
                 <Switch>
                     <Route path="/items/new" component={ItemsNew} />
+                    <Route path="/items/:id" component={ItemsShow} />
                     <Route path="/items" component={ItemsIndex} />
                     <Route path="/missions/new" component={MissionsNew} /> 
                     <Route path="/missions/:id" component={MissionsShow} />

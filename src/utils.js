@@ -16,5 +16,24 @@ export function parseToFireItem(item) {
         timeout: to,
         timestamp
     }
+}
 
+export function parseFromFireItem(item) {
+    const parsedItem = {}
+
+    if (!item) {
+        console.log("Item loading...")
+    } else {
+        const { geoPoint ,name, radius, timeout, timestamp } = item
+        return {
+            name: name,
+            latitude: geoPoint._lat,
+            longitude: geoPoint._long,
+            radius: radius,
+            timeout: timeout,
+            timestamp: timestamp
+        }
+    }
+
+    return parsedItem 
 }

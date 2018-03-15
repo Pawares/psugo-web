@@ -1,11 +1,26 @@
 import React, { Component } from 'react'
-import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { createItem } from '../actions/action_item'
+import { Field, reduxForm } from 'redux-form'
+import { fetchItem } from '../actions/action_item'
+import NavBar from '../components/NavBar'
+import { parseFromFireItem } from '../utils'
 
+class ItemsShow extends Component {
 
-class ItemsNew extends Component {
+    componentWillMount() {
+        console.log("componentWillMount(): hit!")
+        const { id } = this.props.match.params
+        this.props.fetchItem(id)
+    }
+
+    onUpdateClick(values) {
+        console.log(values)
+    }
+
+    onDeleteClick() {
+        console.log('onDelete clicked!')
+    }
 
     renderTextField(field) {
         const { label, input, type, meta: { touched, error }} = field
@@ -46,22 +61,32 @@ class ItemsNew extends Component {
         )
     }
 
-    onSubmit(values) {
-        console.log(values)
-        this.props.createItem(values, () => {
-            this.props.history.push('/items')
-        })
-    }
-
     render() {
-        const { handleSubmit } = this.props
+        const { initialValues, handleSubmit, pristine, reset, submitting} = this.props
+
+        if (!initialValues) {
+            return <div>Loading...</div>
+        }
+
         return (
-            <form 
-                onSubmit={handleSubmit(this.onSubmit.bind(this))}
-                className="container was-validated"
-            >
-                <h3>New Items</h3>
-                <Field 
+            <div> 
+                <NavBar />
+                <div className="container">
+                    <Link to="/items"> Back to Items</Link>
+                    <div className="text-right"> 
+                    <button 
+                    onClick={this.onDeleteClick.bind(this)}
+                    className="btn btn-danger"
+                    >Delete
+                    </button>
+                    </div>
+                </div>
+
+                <form
+                onSubmit={handleSubmit(this.onUpdateClick.bind(this))} 
+                className="container was-validated">
+
+                    <Field 
                     label="Latitude"
                     name="latitude"
                     type="number"
@@ -99,9 +124,25 @@ class ItemsNew extends Component {
                     max="100"
                     component={this.renderNumberField}
                 />
-                <button type="submit" className="btn btn-primary">Save</button>
-                <Link to="/items" className="btn btn-danger">Cancel</Link>
-            </form>
+
+                <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={pristine || submitting}
+            >
+              Update
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              disabled={pristine || submitting}
+              onClick={reset}
+            >
+              Undo Changes
+            </button>
+                </form>
+                
+            </div>
         )
     }
 }
@@ -145,9 +186,18 @@ function validate(values) {
     return errors
 }
 
-export default reduxForm({
-    form: 'ItemsNewForm',
-    validate
-})(
-    connect(null, { createItem })(ItemsNew)
+function mapStateToProps({ items }, ownProps) {
+    const item = items[ownProps.match.params.id]
+    const parsedItem = parseFromFireItem(item)
+    return { initialValues: parsedItem}
+}
+
+export default connect(mapStateToProps, { fetchItem })(
+    reduxForm({
+        form: "ItemsShowFrom",
+        validate,
+        enableReinitialize: true,
+        keepDirtyOnReinitialize: true
+
+    })(ItemsShow)
 )
