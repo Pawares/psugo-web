@@ -4,6 +4,7 @@ import { parseToFireItem } from '../utils'
 export const FETCH_ITEMS = 'FETCH_ITEMS'
 export const CREATE_ITEM = 'CREATE_ITEM'
 export const FETCH_ITEM = 'FETCH_ITEM'
+export const DELETE_ITEM = 'DELETE_ITEM'
 
 export function fetchItems() {
     return (dispatch) => {
@@ -62,4 +63,22 @@ export function fetchItem(id) {
             console.log(error)
         })
     }
+}
+
+export function deleteItem(id, callback) {
+    return (dispatch) => {
+        firestore.collection('items').doc(id).delete()
+        .then(() => {
+            console.log("Document successfully deleted!")
+            dispatch({
+                type: DELETE_ITEM,
+                id: id
+            })
+            callback()
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+    }
+
 }
