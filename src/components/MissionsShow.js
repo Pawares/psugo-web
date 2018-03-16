@@ -3,7 +3,7 @@ import { Field, reduxForm } from "redux-form"
 import { connect } from "react-redux"
 import { Link } from "react-router-dom"
 import NavBar from "./NavBar"
-import { fetchMission, deleteMission, updateMission } from "../actions"
+import { fetchMission, deleteMission, updateMission } from "../actions/action_mission"
 
 class MissionsShow extends Component {
   componentWillMount() {

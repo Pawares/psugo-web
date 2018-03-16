@@ -1,4 +1,4 @@
-import { FETCH_MISSIONS, CREATE_MISSION, FETCH_MISSION, DELETE_MISSION, UPDATE_MISSION} from '../actions/index'
+import { FETCH_MISSIONS, CREATE_MISSION, FETCH_MISSION, DELETE_MISSION, UPDATE_MISSION} from '../actions/action_mission'
 import _ from 'lodash'
 
 export default function(state = {}, action) {

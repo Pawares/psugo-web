@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { fetchMissions } from '../actions'
+import { fetchMissions } from '../actions/action_mission'
 import _ from 'lodash'
 import NavBar from './NavBar'
 
