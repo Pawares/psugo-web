@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import _ from 'lodash';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { fetchMissions } from '../actions/action_mission';
-import NavBar from './NavBar';
+import React, { Component } from 'react'
+import _ from 'lodash'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { fetchMissions } from '../actions/action_mission'
+import NavBar from './NavBar'
 
 class MissionsIndex extends Component {
   componentDidMount() {
-    this.props.fetchMissions();
+    this.props.fetchMissions()
   }
 
   renderMissions() {
@@ -16,14 +16,14 @@ class MissionsIndex extends Component {
         <li className="list-group-item" key={key}>
           <Link to={`/missions/${key}`}>{mission.name}</Link>
         </li>
-      );
-    });
+      )
+    })
   }
 
   render() {
     // console.log(this.props.missions)
     if (!this.props.missions) {
-      return <div>Loading...</div>;
+      return <div>Loading...</div>
     }
     return (
       <div>
@@ -38,11 +38,11 @@ class MissionsIndex extends Component {
           <ul className="list-group">{this.renderMissions()}</ul>
         </div>
       </div>
-    );
+    )
   }
 }
 
 function mapStateToProps({ missions }) {
-  return { missions };
+  return { missions }
 }
-export default connect(mapStateToProps, { fetchMissions })(MissionsIndex);
+export default connect(mapStateToProps, { fetchMissions })(MissionsIndex)

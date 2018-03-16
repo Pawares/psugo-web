@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { createMission } from '../actions/action_mission';
+import React, { Component } from 'react'
+import { Field, reduxForm } from 'redux-form'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { createMission } from '../actions/action_mission'
 
 class MissionsNew extends Component {
   onSubmit(values) {
-    console.log(values);
+    console.log(values)
     this.props.createMission(values, () => {
-      this.props.history.push('/missions');
-    });
+      this.props.history.push('/missions')
+    })
   }
 
   renderField(field) {
-    const { label, input, type, meta: { touched, error } } = field;
+    const { label, input, type, meta: { touched, error } } = field
     // const className = `${touched && error ? 'invalid-feedback' : ''}`
     return (
       <div className="form-group">
@@ -21,11 +21,11 @@ class MissionsNew extends Component {
         <input className="form-control" {...input} type={type} required />
         <div className="invalid-feedback">{touched ? error : ''}</div>
       </div>
-    );
+    )
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit } = this.props
 
     return (
       <form
@@ -57,29 +57,29 @@ class MissionsNew extends Component {
           Cancel
         </Link>
       </form>
-    );
+    )
   }
 }
 
 function validate(values) {
-  const errors = {};
+  const errors = {}
 
   if (!values.name) {
-    errors.name = 'Required';
+    errors.name = 'Required'
   }
 
   if (!values.categories) {
-    errors.categories = 'Required';
+    errors.categories = 'Required'
   }
 
   if (!values.statement) {
-    errors.statement = 'Required';
+    errors.statement = 'Required'
   }
 
-  return errors;
+  return errors
 }
 
 export default reduxForm({
   form: 'MissionsNewForm',
   validate
-})(connect(null, { createMission })(MissionsNew));
+})(connect(null, { createMission })(MissionsNew))

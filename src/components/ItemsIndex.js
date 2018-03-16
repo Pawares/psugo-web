@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import _ from 'lodash';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { fetchItems } from '../actions/action_item';
+import React, { Component } from 'react'
+import _ from 'lodash'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { fetchItems } from '../actions/action_item'
 
-import NavBar from './NavBar';
+import NavBar from './NavBar'
 
 class ItemsIndex extends Component {
   componentDidMount() {
-    this.props.fetchItems();
+    this.props.fetchItems()
   }
 
   renderItems() {
@@ -17,13 +17,13 @@ class ItemsIndex extends Component {
         <li className="list-group-item" key={key}>
           <Link to={`/items/${key}`}>{item.name}</Link>
         </li>
-      );
-    });
+      )
+    })
   }
 
   render() {
     if (!this.props.items) {
-      return <div>Loading...</div>;
+      return <div>Loading...</div>
     }
     return (
       <div>
@@ -38,12 +38,12 @@ class ItemsIndex extends Component {
           <ul className="list-group">{this.renderItems()}</ul>
         </div>
       </div>
-    );
+    )
   }
 }
 
 function mapStateToProps({ items }) {
-  return { items };
+  return { items }
 }
 
-export default connect(mapStateToProps, { fetchItems })(ItemsIndex);
+export default connect(mapStateToProps, { fetchItems })(ItemsIndex)

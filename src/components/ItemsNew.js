@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { createItem } from '../actions/action_item';
+import React, { Component } from 'react'
+import { Field, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { createItem } from '../actions/action_item'
 
 class ItemsNew extends Component {
   onSubmit(values) {
-    console.log(values);
+    console.log(values)
     this.props.createItem(values, () => {
-      this.props.history.push('/items');
+      this.props.history.push('/items')
     })
   }
 
   renderTextField(field) {
-    const {
-      label, input, type, meta: { touched, error },
-    } = field;
+    const { label, input, type, meta: { touched, error } } = field
     return (
       <div className="form-group">
         <label>{label}</label>
@@ -26,9 +24,7 @@ class ItemsNew extends Component {
   }
 
   renderNumberField(field) {
-    const {
-      label, input, type, min, max, meta: { touched, error },
-    } = field;
+    const { label, input, type, min, max, meta: { touched, error } } = field
     return (
       <div className="form-group">
         <label>{label}</label>
@@ -47,7 +43,7 @@ class ItemsNew extends Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit } = this.props
     return (
       <form
         onSubmit={handleSubmit(this.onSubmit.bind(this))}
@@ -99,52 +95,50 @@ class ItemsNew extends Component {
           Cancel
         </Link>
       </form>
-    );
+    )
   }
 }
 
 function validate(values) {
-  const errors = {};
-  const {
-    name, latitude, longitude, radius, timeout,
-  } = values;
+  const errors = {}
+  const { name, latitude, longitude, radius, timeout } = values
 
   if (!name) {
-    errors.name = 'Required';
+    errors.name = 'Required'
   }
 
   if (!latitude) {
-    errors.latitude = 'Required';
+    errors.latitude = 'Required'
   }
 
   if (Number(latitude) > 90 || Number(latitude < -90)) {
-    errors.latitude = 'Latitude must be a number between -90 and 90';
+    errors.latitude = 'Latitude must be a number between -90 and 90'
   }
 
   if (!longitude) {
-    errors.longitude = 'Required';
+    errors.longitude = 'Required'
   }
 
   if (Number(longitude) > 180 || Number(longitude < -180)) {
-    errors.longitude = 'Longitude must be a number between -180 and 180';
+    errors.longitude = 'Longitude must be a number between -180 and 180'
   }
 
   if (!radius) {
-    errors.radius = 'Required';
+    errors.radius = 'Required'
   }
 
   if (Number(radius) < 50 || Number(radius) > 100) {
-    errors.radius = 'Radius must be a number between 50 and 100 meters';
+    errors.radius = 'Radius must be a number between 50 and 100 meters'
   }
 
   if (!timeout) {
-    errors.timeout = 'Required';
+    errors.timeout = 'Required'
   }
 
-  return errors;
+  return errors
 }
 
 export default reduxForm({
   form: 'ItemsNewForm',
-  validate,
-})(connect(null, { createItem })(ItemsNew));
+  validate
+})(connect(null, { createItem })(ItemsNew))

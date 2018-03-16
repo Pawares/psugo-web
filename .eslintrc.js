@@ -16,5 +16,6 @@ module.exports = {
         "no-underscore-dangle": 0,
         "no-undef": 0,
         "new-cap": 0,
+        "import/prefer-default-export": 0,
     }
 };

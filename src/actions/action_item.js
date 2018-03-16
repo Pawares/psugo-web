@@ -1,11 +1,11 @@
-import { firestore } from '../database/config';
-import { parseToFireItem } from '../utils';
+import { firestore } from '../database/config'
+import { parseToFireItem } from '../utils'
 
-export const FETCH_ITEMS = 'FETCH_ITEMS';
-export const CREATE_ITEM = 'CREATE_ITEM';
-export const FETCH_ITEM = 'FETCH_ITEM';
-export const DELETE_ITEM = 'DELETE_ITEM';
-export const UPDATE_ITEM = 'UPDATE_ITEM';
+export const FETCH_ITEMS = 'FETCH_ITEMS'
+export const CREATE_ITEM = 'CREATE_ITEM'
+export const FETCH_ITEM = 'FETCH_ITEM'
+export const DELETE_ITEM = 'DELETE_ITEM'
+export const UPDATE_ITEM = 'UPDATE_ITEM'
 
 export function fetchItems() {
   return (dispatch) => {
@@ -19,18 +19,18 @@ export function fetchItems() {
             type: FETCH_ITEMS,
             id: doc.id,
             payload: doc.data()
-          });
-        });
+          })
+        })
       })
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 }
 
 export function createItem(item, callback) {
   return (dispatch) => {
-    const parsedItem = parseToFireItem(item);
+    const parsedItem = parseToFireItem(item)
     firestore
       .collection('items')
       .add(parsedItem)
@@ -40,13 +40,13 @@ export function createItem(item, callback) {
           type: CREATE_ITEM,
           id: docRef.id,
           payload: parsedItem
-        });
-        callback();
+        })
+        callback()
       })
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 }
 
 export function fetchItem(id) {
@@ -57,20 +57,20 @@ export function fetchItem(id) {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          // console.log("Document data:", doc.data());
+          // console.log("Document data:", doc.data())
           dispatch({
             type: FETCH_ITEM,
             id: id,
             payload: doc.data()
-          });
+          })
         } else {
-          console.log('No such document!');
+          console.log('No such document!')
         }
       })
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 }
 
 export function deleteItem(id, callback) {
@@ -80,22 +80,22 @@ export function deleteItem(id, callback) {
       .doc(id)
       .delete()
       .then(() => {
-        console.log('Document successfully deleted!');
+        console.log('Document successfully deleted!')
         dispatch({
           type: DELETE_ITEM,
           id: id
-        });
-        callback();
+        })
+        callback()
       })
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 }
 
 export function updateItem(id, data, callback) {
   return (dispatch) => {
-    const parsedItem = parseToFireItem(data);
+    const parsedItem = parseToFireItem(data)
     firestore
       .collection('items')
       .doc(id)
@@ -105,11 +105,11 @@ export function updateItem(id, data, callback) {
           type: UPDATE_ITEM,
           id: id,
           payload: data
-        });
-        callback();
+        })
+        callback()
       })
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 }
