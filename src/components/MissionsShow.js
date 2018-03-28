@@ -1,11 +1,17 @@
-import React, { Component } from "react"
-import { Field, reduxForm } from "redux-form"
-import { connect } from "react-redux"
-import { Link } from "react-router-dom"
-import NavBar from "./NavBar"
-import { fetchMission, deleteMission, updateMission } from "../actions"
+import React, { Component } from 'react'
+import { Field, reduxForm } from 'redux-form'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import NavBar from './NavBar'
+import { fetchMission, deleteMission, updateMission } from '../actions/action_mission'
+
 
 class MissionsShow extends Component {
+  constructor(props) {
+    super(props)
+    this.onDeleteClick = this.onDeleteClick.bind(this)
+  }
+
   componentWillMount() {
     const { id } = this.props.match.params
     this.props.fetchMission(id)
@@ -14,7 +20,7 @@ class MissionsShow extends Component {
   onDeleteClick() {
     const { id } = this.props.match.params
     this.props.deleteMission(id, () => {
-      this.props.history.push("/missions")
+      this.props.history.push('/missions')
     })
   }
 
@@ -22,7 +28,7 @@ class MissionsShow extends Component {
     console.log(values)
     const { id } = this.props.match.params
     this.props.updateMission(id, values, () => {
-        console.log("Update Successful!")
+      console.log('Update Successful!')
     })
   }
   renderField(field) {
@@ -31,7 +37,7 @@ class MissionsShow extends Component {
       <div className="form-group">
         <label>{label}</label>
         <input className="form-control" {...input} type={type} required />
-        <div className="invalid-feedback">{touched ? error : ""}</div>
+        <div className="invalid-feedback">{touched ? error : ''}</div>
       </div>
     )
   }
@@ -57,12 +63,12 @@ class MissionsShow extends Component {
           <div className="text-right">
             <button
               className="btn btn-danger"
-              onClick={this.onDeleteClick.bind(this)}
+              onClick={this.onDeleteClick}
             >
               Delete Mission
             </button>
           </div>
-        
+
           <form
             onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
             className="was-validated"
@@ -111,15 +117,15 @@ function validate(values) {
   const errors = {}
 
   if (!values.name) {
-    errors.name = "Required"
+    errors.name = 'Required'
   }
 
   if (!values.categories) {
-    errors.categories = "Required"
+    errors.categories = 'Required'
   }
 
   if (!values.statement) {
-    errors.statement = "Required"
+    errors.statement = 'Required'
   }
 
   return errors
@@ -130,7 +136,7 @@ function mapStateToProps({ missions }, ownProps) {
 
 export default connect(mapStateToProps, { fetchMission, deleteMission, updateMission })(
   reduxForm({
-    form: "MissionsShowForm",
+    form: 'MissionsShowForm',
     validate,
     enableReinitialize: true,
     keepDirtyOnReinitialize: true

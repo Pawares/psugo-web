@@ -1,22 +1,21 @@
 import { firestore } from '../database/config'
-import { parseToFireItem } from '../utils'
 
-export const FETCH_ITEMS = 'FETCH_ITEMS'
-export const CREATE_ITEM = 'CREATE_ITEM'
-export const FETCH_ITEM = 'FETCH_ITEM'
-export const DELETE_ITEM = 'DELETE_ITEM'
-export const UPDATE_ITEM = 'UPDATE_ITEM'
+export const FETCH_MISSIONS = 'FETCH_MISSIONS'
+export const CREATE_MISSION = 'CREATE_MISSION'
+export const FETCH_MISSION = 'FETCH_MISSION'
+export const DELETE_MISSION = 'DELETE_MISSION'
+export const UPDATE_MISSION = 'UPDATE_MISSION'
 
-export function fetchItems() {
+export function fetchMissions() {
   return (dispatch) => {
     firestore
-      .collection('items')
+      .collection('missions')
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           // console.log(doc.id, " => ", doc.data())
           dispatch({
-            type: FETCH_ITEMS,
+            type: FETCH_MISSIONS,
             id: doc.id,
             payload: doc.data()
           })
@@ -28,88 +27,87 @@ export function fetchItems() {
   }
 }
 
-export function createItem(item, callback) {
+export function createMission(mission, callback) {
   return (dispatch) => {
-    const parsedItem = parseToFireItem(item)
     firestore
-      .collection('items')
-      .add(parsedItem)
+      .collection('missions')
+      .add(mission)
       .then((docRef) => {
-        // console.log("Document written with ID: ", docRef.id)
+        console.log('Document written with ID: ', docRef.id)
         dispatch({
-          type: CREATE_ITEM,
+          type: CREATE_MISSION,
           id: docRef.id,
-          payload: parsedItem
+          payload: mission
         })
         callback()
       })
       .catch((error) => {
-        console.log(error)
+        console.error('Error adding document: ', error)
       })
   }
 }
 
-export function fetchItem(id) {
+export function fetchMission(id) {
   return (dispatch) => {
     firestore
-      .collection('items')
+      .collection('missions')
       .doc(id)
       .get()
       .then((doc) => {
         if (doc.exists) {
           // console.log("Document data:", doc.data())
           dispatch({
-            type: FETCH_ITEM,
+            type: FETCH_MISSION,
             id: id,
             payload: doc.data()
           })
         } else {
+          // doc.data() will be undefined in this case
           console.log('No such document!')
         }
       })
       .catch((error) => {
-        console.log(error)
+        console.log('Error getting document:', error)
       })
   }
 }
 
-export function deleteItem(id, callback) {
+export function deleteMission(id, callback) {
   return (dispatch) => {
     firestore
-      .collection('items')
+      .collection('missions')
       .doc(id)
       .delete()
       .then(() => {
         console.log('Document successfully deleted!')
         dispatch({
-          type: DELETE_ITEM,
+          type: DELETE_MISSION,
           id: id
         })
         callback()
       })
       .catch((error) => {
-        console.log(error)
+        console.error('Error removing document: ', error)
       })
   }
 }
 
-export function updateItem(id, data, callback) {
+export function updateMission(id, data, callback) {
   return (dispatch) => {
-    const parsedItem = parseToFireItem(data)
     firestore
-      .collection('items')
+      .collection('missions')
       .doc(id)
-      .set(parsedItem)
+      .set(data)
       .then(() => {
         dispatch({
-          type: UPDATE_ITEM,
+          type: UPDATE_MISSION,
           id: id,
           payload: data
         })
         callback()
       })
       .catch((error) => {
-        console.log(error)
+        console.error('Error updating document: ', error)
       })
   }
 }
