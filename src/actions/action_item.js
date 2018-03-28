@@ -1,5 +1,4 @@
 import { firestore } from '../database/config'
-import { parseToFireItem } from '../utils'
 
 export const FETCH_ITEMS = 'FETCH_ITEMS'
 export const CREATE_ITEM = 'CREATE_ITEM'
@@ -30,16 +29,15 @@ export function fetchItems() {
 
 export function createItem(item, callback) {
   return (dispatch) => {
-    const parsedItem = parseToFireItem(item)
     firestore
       .collection('items')
-      .add(parsedItem)
+      .add(item)
       .then((docRef) => {
         // console.log("Document written with ID: ", docRef.id)
         dispatch({
           type: CREATE_ITEM,
           id: docRef.id,
-          payload: parsedItem
+          payload: item
         })
         callback()
       })
@@ -95,11 +93,10 @@ export function deleteItem(id, callback) {
 
 export function updateItem(id, data, callback) {
   return (dispatch) => {
-    const parsedItem = parseToFireItem(data)
     firestore
       .collection('items')
       .doc(id)
-      .set(parsedItem)
+      .set(data)
       .then(() => {
         dispatch({
           type: UPDATE_ITEM,

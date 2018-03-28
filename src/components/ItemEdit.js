@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
 import { Segment, Grid, Header, Form, Button } from 'semantic-ui-react'
 import { fetchItem, deleteItem, updateItem } from '../actions/action_item'
-import { parseFromFireItem } from '../utils'
 
 class ItemEdit extends Component {
   constructor(props) {
@@ -197,8 +196,7 @@ function validate(values) {
 
 function mapStateToProps({ items }, ownProps) {
   const item = items[ownProps.match.params.id]
-  const parsedItem = parseFromFireItem(item)
-  return { initialValues: parsedItem }
+  return { initialValues: item }
 }
 
 export default connect(mapStateToProps, { fetchItem, deleteItem, updateItem })(

@@ -2,8 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import store from './store'
 import { Container } from 'semantic-ui-react'
+import store from './store'
+
 
 import './styles/stylesheet.css'
 import App from './components/App'
