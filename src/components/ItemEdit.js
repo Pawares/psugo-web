@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
-import { Segment, Grid, Header, Form, Button } from 'semantic-ui-react'
+import { Segment, Grid, Header, Form, Button, Container, Divider } from 'semantic-ui-react'
 import { fetchItem, deleteItem, updateItem } from '../actions/action_item'
+import Map from './Map'
 
 class ItemEdit extends Component {
   constructor(props) {
@@ -72,6 +73,8 @@ class ItemEdit extends Component {
       submitting,
     } = this.props
 
+    // console.log(initialValues)
+
     if (!initialValues) {
       return <div>Loading...</div>
     }
@@ -85,6 +88,10 @@ class ItemEdit extends Component {
             <Form
               onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
             >
+              <Container>
+                <Map lat={initialValues.latitude} lng={initialValues.longitude} />
+              </Container>
+              <Divider horizontal >Map</Divider>
               <Field
                 label="Latitude"
                 name="latitude"

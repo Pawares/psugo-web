@@ -20,10 +20,8 @@ class ItemList extends Component {
             <Card.Description>{item.name}</Card.Description>
           </Card.Content>
           <Card.Content extra>
-            <a>
-              <Icon name="user" />
-              Activated
-            </a>
+            <Icon name="user" />
+            Activated
           </Card.Content>
         </Card>
       )
