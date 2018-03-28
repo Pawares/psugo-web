@@ -32,9 +32,7 @@ class MissionNew extends Component {
       <Segment compact stacked color="orange" >
         <Grid tyle={{ height: '100%' }} >
           <Grid.Column style={{ maxWidth: 450 }} >
-            <Header>
-              Mission New
-            </Header>
+            <Header as="h2" textAlign="center" >Mission New</Header>
             <Form
               onSubmit={handleSubmit(this.onSubmit.bind(this))}
               className="container"

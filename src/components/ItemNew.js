@@ -48,9 +48,7 @@ class ItemNew extends Component {
       <Segment compact stacked color="orange" >
         <Grid style={{ height: '100%' }} >
           <Grid.Column style={{ maxWidth: 450 }} >
-            <Header>
-              Item New
-            </Header>
+            <Header as="h2" textAlign="center" >Item New</Header>
 
             <Form
               onSubmit={handleSubmit(this.onSubmit.bind(this))}

@@ -83,7 +83,7 @@ class ItemEdit extends Component {
       <Segment stacked compact color="purple" >
         <Grid style={{ height: '100%' }} >
           <Grid.Column style={{ maxWidth: 450 }} >
-            <Header>Item Edit</Header>
+            <Header as="h2" textAlign="center" >Item Edit</Header>
 
             <Form
               onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
