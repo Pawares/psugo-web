@@ -1,14 +1,14 @@
 import React from 'react'
-import NavBar from './NavBar'
+import { Segment } from 'semantic-ui-react'
 
 const App = () => {
   return (
-    <div>
-      <NavBar />
-      <div className="container">
-        <h1>PSU GO!</h1>
+    <Segment.Group>
+      <div>
+        fdfda
       </div>
-    </div>
+
+    </Segment.Group>
   )
 }
 
