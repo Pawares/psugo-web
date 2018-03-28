@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { Field, reduxForm } from 'redux-form'
+import { Segment, Grid, Header, Form, Button } from 'semantic-ui-react'
 import { fetchItem, deleteItem, updateItem } from '../actions/action_item'
-import NavBar from '../components/NavBar'
 import { parseFromFireItem } from '../utils'
 
-class ItemsShow extends Component {
+class ItemEdit extends Component {
   constructor(props) {
     super(props)
     this.onDeleteClick = this.onDeleteClick.bind(this)
@@ -37,11 +36,11 @@ class ItemsShow extends Component {
       label, input, type, meta: { touched, error },
     } = field
     return (
-      <div className="form-group">
+      <Form.Field>
         <label>{label}</label>
-        <input className="form-control" {...input} type={type} required />
-        <div className="invalid-feedback">{touched ? error : ''}</div>
-      </div>
+        <input {...input} type={type} required />
+        <div >{touched ? error : ''}</div>
+      </Form.Field>
     )
   }
 
@@ -50,10 +49,9 @@ class ItemsShow extends Component {
       label, input, type, min, max, meta: { touched, error },
     } = field
     return (
-      <div className="form-group">
+      <Form.Field>
         <label>{label}</label>
         <input
-          className="form-control"
           {...input}
           type={type}
           min={min}
@@ -61,8 +59,8 @@ class ItemsShow extends Component {
           step="any"
           required
         />
-        <div className="invalid-feedback">{touched ? error : ''}</div>
-      </div>
+        <div >{touched ? error : ''}</div>
+      </Form.Field>
     )
   }
 
@@ -80,80 +78,78 @@ class ItemsShow extends Component {
     }
 
     return (
-      <div>
-        <NavBar />
-        <div className="container">
-          <Link to="/items"> Back to Items</Link>
-          <div className="text-right">
-            <button
-              onClick={this.onDeleteClick}
-              className="btn btn-danger"
-            >
-              Delete
-            </button>
-          </div>
+      <Segment stacked compact color="purple" >
+        <Grid style={{ height: '100%' }} >
+          <Grid.Column style={{ maxWidth: 450 }} >
+            <Header>Item Edit</Header>
 
-          <form
-            onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
-            className="was-validated"
-          >
-            <Field
-              label="Latitude"
-              name="latitude"
-              type="number"
-              min="-90"
-              max="90"
-              component={this.renderNumberField}
-            />
-            <Field
-              label="Longitude"
-              name="longitude"
-              type="number"
-              min="-180"
-              max="180"
-              component={this.renderNumberField}
-            />
-            <Field
-              label="Name"
-              name="name"
-              type="text"
-              component={this.renderTextField}
-            />
-            <Field
-              label="Radius(meters)"
-              name="radius"
-              type="number"
-              min="50"
-              max="100"
-              component={this.renderNumberField}
-            />
-            <Field
-              label="timeout(hours)"
-              name="timeout"
-              type="number"
-              min="1"
-              max="100"
-              component={this.renderNumberField}
-            />
+            <Form
+              onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
+            >
+              <Field
+                label="Latitude"
+                name="latitude"
+                type="number"
+                min="-90"
+                max="90"
+                component={this.renderNumberField}
+              />
+              <Field
+                label="Longitude"
+                name="longitude"
+                type="number"
+                min="-180"
+                max="180"
+                component={this.renderNumberField}
+              />
+              <Field
+                label="Name"
+                name="name"
+                type="text"
+                component={this.renderTextField}
+              />
+              <Field
+                label="Radius(meters)"
+                name="radius"
+                type="number"
+                min="50"
+                max="100"
+                component={this.renderNumberField}
+              />
+              <Field
+                label="timeout(hours)"
+                name="timeout"
+                type="number"
+                min="1"
+                max="100"
+                component={this.renderNumberField}
+              />
 
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={pristine || submitting}
-            >
-              Update
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              disabled={pristine || submitting}
-              onClick={reset}
-            >
-              Undo Changes
-            </button>
-          </form>
-        </div>
-      </div>
+              <Button
+                primary
+                type="submit"
+                disabled={pristine || submitting}
+              >
+                Update
+              </Button>
+              <Button
+                type="button"
+                disabled={pristine || submitting}
+                onClick={reset}
+              >
+                Undo Changes
+              </Button>
+              <Button
+                negative
+                onClick={this.onDeleteClick}
+              >
+                Delete
+              </Button>
+            </Form>
+          </Grid.Column>
+        </Grid>
+      </Segment>
+
     )
   }
 }
@@ -207,10 +203,10 @@ function mapStateToProps({ items }, ownProps) {
 
 export default connect(mapStateToProps, { fetchItem, deleteItem, updateItem })(
   reduxForm({
-    form: 'ItemsShowFrom',
+    form: 'ItemEditFrom',
     validate,
     enableReinitialize: true,
     keepDirtyOnReinitialize: true,
-  })(ItemsShow)
+  })(ItemEdit)
 )
 

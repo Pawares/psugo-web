@@ -1,29 +1,31 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { Segment, Menu } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
-const NavBar = () => {
-  return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
-      <Link to="/" className="navbar-brand">PSU GO</Link>
-      <button className="navbar-toggler" data-toggle="collapse" data-target="#navbarMenu">
-        <span className="navbar-toggler-icon" />
-      </button>
-      <div className="collapse navbar-collapse" id="navbarMenu">
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <Link to="/missions" className="nav-link">Missions</Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/items" className="nav-link">Items</Link>
-          </li>
-          <li>
-            <Link to="/quizzes" className="nav-link">Quizzes</Link>
-          </li>
-        </ul>
-      </div>
+class NavBar extends Component {
 
-    </nav>
-  )
+  state = { activeItem: 'missions' }
+
+  handleItemClick = (e, { name }) => {
+    this.setState({ activeItem: name })
+  }
+
+  render() {
+    const { activeItem } = this.state
+
+    return (
+      <Segment inverted >
+        <Menu inverted secondary >
+          <Menu.Item as={Link} to='/missions' name='missions' active={activeItem === 'missions'} onClick={this.handleItemClick.bind(this)} />
+          <Menu.Item as={Link} to='/items' name='items' active={activeItem === 'items'} onClick={this.handleItemClick.bind(this)} />
+          <Menu.Item as={Link} to='/quizzes' name='quizzes' active={activeItem === 'quizzes'} onClick={this.handleItemClick.bind(this)} />
+          <Menu.Menu position='right' >
+            <Menu.Item name='logout' active={activeItem === 'logout'} onClick={this.handleItemClick.bind(this)} />
+          </Menu.Menu>
+        </Menu>
+      </Segment>
+    )
+  }
 }
 
 export default NavBar
