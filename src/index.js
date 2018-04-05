@@ -14,6 +14,7 @@ import MissionEdit from './components/MissionEdit'
 import ItemList from './components/ItemList'
 import ItemNew from './components/ItemNew'
 import ItemEdit from './components/ItemEdit'
+import QuizList from './components/QuizList'
 import NavBar from './components/NavBar'
 
 ReactDOM.render(
@@ -23,6 +24,7 @@ ReactDOM.render(
         <NavBar />
         <Container>
           <Switch>
+            <Route path="/quizzes" component={QuizList} />
             <Route path="/items/new" component={ItemNew} />
             <Route path="/items/:id" component={ItemEdit} />
             <Route path="/items" component={ItemList} />
