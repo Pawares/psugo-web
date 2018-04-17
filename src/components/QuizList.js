@@ -13,7 +13,7 @@ class QuizList extends Component {
   renderQuizzes() {
     return _.map(this.props.quizzes, (quiz, key) => {
       return (
-        <Card key={key} >
+        <Card as={Link} to={`/quizzes/${key}`} fluid color="orange" key={key} >
           <Card.Content>
             <Card.Header>{quiz.question}</Card.Header>
           </Card.Content>
@@ -28,7 +28,7 @@ class QuizList extends Component {
   }
 
   render() {
-    if (!this.props) {
+    if (!this.props.quizzes) {
       return <div>Loading...</div>
     }
 

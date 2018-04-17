@@ -96,6 +96,7 @@ class MissionEdit extends Component {
                 Undo Changes
               </Button>
               <Button
+                type="button"
                 negative
                 onClick={this.onDeleteClick}
               >
