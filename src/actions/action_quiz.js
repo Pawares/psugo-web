@@ -1,6 +1,7 @@
 import { firestore } from '../database/config';
 
 export const FETCH_QUIZZES = 'FETCH_QUIZZES'
+export const CREATE_QUIZ = 'CREATE_QUIZ'
 
 export function fetchQuizzes() {
   return (dispatch) => {
@@ -16,6 +17,26 @@ export function fetchQuizzes() {
             payload: doc.data()
           })
         })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+}
+
+export function createQuiz(quiz, callback) {
+  return (dispatch) => {
+    firestore
+      .collection('quizzes')
+      .add(quiz)
+      .then((docRef) => {
+        console.log('Document written with ID: ', docRef.id)
+        dispatch({
+          type: CREATE_QUIZ,
+          id: docRef.id,
+          payload: quiz
+        })
+        callback()
       })
       .catch((error) => {
         console.log(error)

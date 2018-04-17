@@ -15,6 +15,7 @@ import ItemList from './components/ItemList'
 import ItemNew from './components/ItemNew'
 import ItemEdit from './components/ItemEdit'
 import QuizList from './components/QuizList'
+import QuizNew from './components/QuizNew'
 import NavBar from './components/NavBar'
 
 ReactDOM.render(
@@ -24,6 +25,7 @@ ReactDOM.render(
         <NavBar />
         <Container>
           <Switch>
+            <Route path="/quizzes/new" component={QuizNew} />
             <Route path="/quizzes" component={QuizList} />
             <Route path="/items/new" component={ItemNew} />
             <Route path="/items/:id" component={ItemEdit} />

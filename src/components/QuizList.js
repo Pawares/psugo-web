@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
-import { Segment, Grid, Header, Card, Icon } from 'semantic-ui-react';
+import { Segment, Grid, Header, Card, Icon, Container } from 'semantic-ui-react';
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { fetchQuizzes } from '../actions/action_quiz'
 
@@ -36,6 +37,12 @@ class QuizList extends Component {
         <Grid style={{ height: '100%' }} >
           <Grid.Column style={{ maxWidth: 450 }} >
             <Header as="h2" textAlign="center" >Quiz List</Header>
+
+            <Container textAlign="right" >
+              <Link to="./quizzes/new">
+                <Icon name="plus circle" size="huge" color="teal" />
+              </Link>
+            </Container>
 
             <Card.Group>
               {this.renderQuizzes()}
