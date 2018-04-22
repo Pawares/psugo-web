@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
 import { Field, reduxForm, formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Segment, Grid, Form, Header, Button, Container, Divider } from 'semantic-ui-react'
+import { Segment, Grid, Form, Header, Button, Container, Divider, Dropdown } from 'semantic-ui-react'
 import { createItem } from '../actions/action_item'
 import Map from './Map'
 
+let quizOptions = []
+
 class ItemNew extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      latitude: this.props.latitude,
-      longitude: this.props.longitude,
-    }
+  componentWillMount() {
+    quizOptions = this.createQuizOptions()
+    // console.log(quizOptions)
   }
 
   onSubmit(values) {
@@ -22,17 +22,27 @@ class ItemNew extends Component {
     })
   }
 
+  createQuizOptions() {
+    return _.map(this.props.quizzes, this.createQuizOption)
+  }
+
+  createQuizOption(quiz, key) {
+    return {
+      key: key,
+      value: key,
+      text: quiz.question
+    }
+  }
+
   renderTextField(field) {
     const { label, input, type, meta: { touched, error } } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input {...input} type={type} required />
+        <Form.Input label={label} {...input} type={type} required />
         <div >{touched ? error : ''}</div>
       </Form.Field>
     )
   }
-
 
   renderNumberField(field) {
     const { name, label, input, type, min, max, meta: { touched, error } } = field
@@ -58,7 +68,24 @@ class ItemNew extends Component {
       return <Map lat={latitude} lng={longitude} />
     }
 
-    return <div>โปรดป้อนค่า latitude และ longitude เพื่อแสดงบนแผนที่</div>
+    return <div>โปรดป้อนค่าในช่อง latitude และ longitude เพื่อแสดงบนแผนที่</div>
+  }
+
+  renderDropdownQuizzesField(props) {
+    return (
+      <Form.Field>
+        <label>Quizzes</label>
+        <Dropdown
+          options={quizOptions}
+          multiple
+          selection
+          {...props.input}
+          value={props.input.value}
+          onChange={(param, data) => props.input.onChange(data.value)}
+          placeholder="โปรดเลือกแบบทดสอบ"
+        />
+      </Form.Field>
+    )
   }
 
   render() {
@@ -119,6 +146,12 @@ class ItemNew extends Component {
                 max="100"
                 component={this.renderNumberField}
               />
+
+              <Field
+                name="quizzes"
+                component={this.renderDropdownQuizzesField}
+              />
+
               <Button type="submit" >Save</Button>
               <Button negative as={Link} to="/items">Cancel</Button>
             </Form>
@@ -169,10 +202,10 @@ function validate(values) {
   return errors
 }
 
-// export default reduxForm({
-//   form: 'ItemNewForm',
-//   validate
-// })(connect(null, { createItem })(ItemNew))
+
+function mapStateToProps({ quizzes }) {
+  return { quizzes }
+}
 
 ItemNew = reduxForm({
   form: 'ItemNewForm',
@@ -190,4 +223,4 @@ ItemNew = connect(
   }
 )(ItemNew)
 
-export default connect(null, { createItem })(ItemNew)
+export default connect(mapStateToProps, { createItem })(ItemNew)

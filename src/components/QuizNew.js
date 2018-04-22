@@ -41,7 +41,7 @@ class QuizNew extends Component {
     )
   }
 
-  renderDropdownAnswerField(props) {
+  renderDropdownCorrectAnswerField(props) {
     return (
       <Form.Field>
         <label>Answer</label>
@@ -105,7 +105,7 @@ class QuizNew extends Component {
 
               <Field
                 name="answer"
-                component={this.renderDropdownAnswerField}
+                component={this.renderDropdownCorrectAnswerField}
                 label="เลือกคำตอบที่ถูกต้อง"
               />
 

@@ -76,8 +76,6 @@ class ItemEdit extends Component {
       submitting,
     } = this.props
 
-    // console.log(initialValues)
-
     if (!initialValues) {
       return <div>Loading...</div>
     }
