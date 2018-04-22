@@ -2,13 +2,17 @@ import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Segment, Grid, Header, Form, TextArea, Button } from 'semantic-ui-react'
+import { Segment, Grid, Header, Form, Button, Dropdown } from 'semantic-ui-react'
 import { createQuiz } from '../actions/action_quiz'
 
-const options = ['opt_1', 'opt_2', 'opt_3', 'opt_4']
+const answerOptions = [
+  { key: 'opt_1', value: 'opt_1', text: 'Option 1' },
+  { key: 'opt_2', value: 'opt_2', text: 'Option 2' },
+  { key: 'opt_3', value: 'opt_3', text: 'Option 3' },
+  { key: 'opt_4', value: 'opt_4', text: 'Option 4' },
+]
 
 class QuizNew extends Component {
-
   onSubmit(values) {
     console.log(values)
     this.props.createQuiz(values, () => {
@@ -17,12 +21,11 @@ class QuizNew extends Component {
   }
 
   renderQuestionField(field) {
-    const { label, input, type, meta: { touched, error } } = field
+    const { label, input, meta: { touched, error } } = field
 
     return (
-      <Form.Field>
-        <label>{label}</label>
-        <TextArea {...input} />
+      <Form.Field >
+        <Form.TextArea label={label} {...input} />
         <div>{touched ? error : ''}</div>
       </Form.Field>
     )
@@ -32,24 +35,39 @@ class QuizNew extends Component {
     const { label, input, type, meta: { touched, error } } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input {...input} type={type} required />
+        <Form.Input label={label} {...input} type={type} required />
         <div>{touched ? error : ''}</div>
       </Form.Field>
     )
   }
+
+  renderDropdownAnswerField(props) {
+    return (
+      <Form.Field>
+        <label>Answer</label>
+        <Dropdown
+          options={answerOptions}
+          selection
+          {...props.input}
+          value={props.input.value}
+          onChange={(param, data) => props.input.onChange(data.value)}
+          placeholder={props.label}
+        />
+      </Form.Field>
+    )
+  }
+
 
   render() {
     const { handleSubmit } = this.props
     return (
       <Segment compact stacked color="orange" >
         <Grid style={{ height: '100%' }} >
-          <Grid.Column style={{ maxWidth: 450 }} >
+          <Grid.Column style={{ width: 450 }} >
             <Header as="h2" textAlign="center">Quiz New</Header>
 
             <Form
               onSubmit={handleSubmit(this.onSubmit.bind(this))}
-              className="container"
             >
               <Field
                 label="Question"
@@ -85,14 +103,11 @@ class QuizNew extends Component {
                 component={this.renderAnswerField}
               />
 
-              <Field name="answer" component="select" >
-                <option value="" >Select a Correct Option...</option>
-                {options.map(option => (
-                  <option value={option} key={option} >
-                    {option}
-                  </option>
-                ))}
-              </Field>
+              <Field
+                name="answer"
+                component={this.renderDropdownAnswerField}
+                label="เลือกคำตอบที่ถูกต้อง"
+              />
 
               <Button type="submit" >Save</Button>
               <Button negative as={Link} to="/quizzes" >Cancel</Button>
@@ -110,23 +125,23 @@ function validate(values) {
   const { question, answer, opt_1, opt_2, opt_3, opt_4 } = values
 
   if (!question) {
-    errors.question= 'Required'
+    errors.question = 'Required'
   }
 
   if (!answer) {
-    errors.answer= 'Required'
+    errors.answer = 'Required'
   }
 
   if (!opt_1) {
-    errors.opt_1= 'Required'
+    errors.opt_1 = 'Required'
   }
 
   if (!opt_2) {
-    errors.opt_2= 'Required'
+    errors.opt_2 = 'Required'
   }
 
   if (!opt_3) {
-    errors.opt_3= 'Required'
+    errors.opt_3 = 'Required'
   }
 
   if (!opt_4) {

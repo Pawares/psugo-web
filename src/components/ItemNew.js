@@ -2,15 +2,32 @@ import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Segment, Grid, Form, Header, Button } from 'semantic-ui-react'
+import { Segment, Grid, Form, Header, Button, Container, Divider } from 'semantic-ui-react'
 import { createItem } from '../actions/action_item'
+import Map from './Map'
 
 class ItemNew extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      latitude: 7.0017253,
+      longitude: 100.501491,
+    }
+
+    this.handleInputChange = this.handleInputChange.bind(this)
+  }
+
   onSubmit(values) {
     console.log(values)
     this.props.createItem(values, () => {
       this.props.history.push('/items')
     })
+  }
+
+  handleInputChange(event) {
+    const { value, name } = event.target
+    this.setState({ [name]: value })
   }
 
   renderTextField(field) {
@@ -25,21 +42,32 @@ class ItemNew extends Component {
   }
 
   renderNumberField(field) {
-    const { label, input, type, min, max, meta: { touched, error } } = field
+    const { name, label, input, type, min, max, meta: { touched, error } } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input
+        <Form.Input
+          label={label}
+          name={name}
           {...input}
           type={type}
           min={min}
           max={max}
           step="any"
           required
+          // onChange={this.handleInputChange}
         />
         <div >{touched ? error : ''}</div>
       </Form.Field>
     )
+  }
+
+  renderMap() {
+    const { latitude, longitude } = this.state
+    if (this.state.latitude && this.state.longitude) {
+      return <Map lat={latitude} lng={longitude} />
+    }
+
+    return <div>Please type latitude and longitude</div>
   }
 
   render() {
@@ -52,8 +80,11 @@ class ItemNew extends Component {
 
             <Form
               onSubmit={handleSubmit(this.onSubmit.bind(this))}
-              className="container"
             >
+              <Container>
+                {this.renderMap()}
+              </Container>
+              <Divider horizontal>MAP</Divider>
               <Field
                 label="Latitude"
                 name="latitude"

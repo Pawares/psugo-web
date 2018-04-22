@@ -4,6 +4,7 @@ import { Field, reduxForm } from 'redux-form'
 import { Segment, Grid, Header, Form, Button, Container, Divider } from 'semantic-ui-react'
 import { fetchItem, deleteItem, updateItem } from '../actions/action_item'
 import Map from './Map'
+import QuizOptionDropdown from './QuizOptionDropdown'
 
 class ItemEdit extends Component {
   constructor(props) {
@@ -37,21 +38,23 @@ class ItemEdit extends Component {
     } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input {...input} type={type} required />
+        <Form.Input
+          label={label}
+          {...input}
+          type={type}
+          required
+        />
         <div >{touched ? error : ''}</div>
       </Form.Field>
     )
   }
 
   renderNumberField(field) {
-    const {
-      label, input, type, min, max, meta: { touched, error },
-    } = field
+    const { label, input, type, min, max, meta: { touched, error } } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input
+        <Form.Input
+          label={label}
           {...input}
           type={type}
           min={min}
@@ -131,6 +134,13 @@ class ItemEdit extends Component {
                 component={this.renderNumberField}
               />
 
+              <Field
+                name="quizOptionDropdown"
+                component={QuizOptionDropdown}
+              />
+
+              <Divider horizontal />
+
               <Button
                 primary
                 type="submit"
@@ -152,6 +162,7 @@ class ItemEdit extends Component {
               >
                 Delete
               </Button>
+
             </Form>
           </Grid.Column>
         </Grid>

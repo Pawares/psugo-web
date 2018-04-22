@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form'
 import { connect } from 'react-redux'
-import { Segment, Grid, Header, Form, Button } from 'semantic-ui-react'
+import { Segment, Grid, Header, Form, Button, Container } from 'semantic-ui-react'
 import { fetchMission, deleteMission, updateMission } from '../actions/action_mission'
+import MapMarkerCluterer from './MapMarkerCluterer'
+import ItemOptionDropdown from './ItemOptionDropdown'
 
 
 class MissionEdit extends Component {
@@ -33,9 +35,14 @@ class MissionEdit extends Component {
   renderField(field) {
     const { label, input, type, meta: { touched, error } } = field
     return (
-      <Form.Field required >
-        <label>{label}</label>
-        <input {...input} type={type} required />
+      <Form.Field >
+        <Form.Input
+          fluid
+          label={label}
+          {...input}
+          type={type}
+          required
+        />
         <div>{touched ? error : ''}</div>
       </Form.Field>
     )
@@ -81,6 +88,16 @@ class MissionEdit extends Component {
                 type="text"
                 component={this.renderField}
               />
+
+              <Container>
+                <MapMarkerCluterer />
+              </Container>
+
+              <Field
+                name="itemOptionDropdown"
+                component={ItemOptionDropdown}
+              />
+
               <Button
                 primary
                 type="submit"
