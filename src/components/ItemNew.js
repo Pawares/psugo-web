@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Segment, Grid, Form, Header, Button, Container, Divider } from 'semantic-ui-react'
@@ -9,13 +9,10 @@ import Map from './Map'
 class ItemNew extends Component {
   constructor(props) {
     super(props)
-
     this.state = {
-      latitude: 7.0017253,
-      longitude: 100.501491,
+      latitude: this.props.latitude,
+      longitude: this.props.longitude,
     }
-
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
   onSubmit(values) {
@@ -23,11 +20,6 @@ class ItemNew extends Component {
     this.props.createItem(values, () => {
       this.props.history.push('/items')
     })
-  }
-
-  handleInputChange(event) {
-    const { value, name } = event.target
-    this.setState({ [name]: value })
   }
 
   renderTextField(field) {
@@ -40,6 +32,7 @@ class ItemNew extends Component {
       </Form.Field>
     )
   }
+
 
   renderNumberField(field) {
     const { name, label, input, type, min, max, meta: { touched, error } } = field
@@ -54,24 +47,22 @@ class ItemNew extends Component {
           max={max}
           step="any"
           required
-          // onChange={this.handleInputChange}
         />
         <div >{touched ? error : ''}</div>
       </Form.Field>
     )
   }
 
-  renderMap() {
-    const { latitude, longitude } = this.state
-    if (this.state.latitude && this.state.longitude) {
+  renderMap(latitude, longitude) {
+    if (latitude && longitude) {
       return <Map lat={latitude} lng={longitude} />
     }
 
-    return <div>Please type latitude and longitude</div>
+    return <div>โปรดป้อนค่า latitude และ longitude เพื่อแสดงบนแผนที่</div>
   }
 
   render() {
-    const { handleSubmit } = this.props
+    const { handleSubmit, latitude, longitude } = this.props
     return (
       <Segment compact stacked color="orange" >
         <Grid style={{ height: '100%' }} >
@@ -82,9 +73,10 @@ class ItemNew extends Component {
               onSubmit={handleSubmit(this.onSubmit.bind(this))}
             >
               <Container>
-                {this.renderMap()}
+                {this.renderMap(latitude, longitude)}
               </Container>
               <Divider horizontal>MAP</Divider>
+
               <Field
                 label="Latitude"
                 name="latitude"
@@ -93,6 +85,7 @@ class ItemNew extends Component {
                 max="90"
                 component={this.renderNumberField}
               />
+
               <Field
                 label="Longitude"
                 name="longitude"
@@ -101,12 +94,14 @@ class ItemNew extends Component {
                 max="180"
                 component={this.renderNumberField}
               />
+
               <Field
                 label="Name"
                 name="name"
                 type="text"
                 component={this.renderTextField}
               />
+
               <Field
                 label="Radius(meters)"
                 name="radius"
@@ -115,6 +110,7 @@ class ItemNew extends Component {
                 max="100"
                 component={this.renderNumberField}
               />
+
               <Field
                 label="timeout(hours)"
                 name="timeout"
@@ -173,7 +169,25 @@ function validate(values) {
   return errors
 }
 
-export default reduxForm({
+// export default reduxForm({
+//   form: 'ItemNewForm',
+//   validate
+// })(connect(null, { createItem })(ItemNew))
+
+ItemNew = reduxForm({
   form: 'ItemNewForm',
   validate
-})(connect(null, { createItem })(ItemNew))
+})(ItemNew)
+
+const selector = formValueSelector('ItemNewForm')
+ItemNew = connect(
+  (state) => {
+    const { latitude, longitude } = selector(state, 'latitude', 'longitude')
+    return {
+      latitude,
+      longitude
+    }
+  }
+)(ItemNew)
+
+export default connect(null, { createItem })(ItemNew)
