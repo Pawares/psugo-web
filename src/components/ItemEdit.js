@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
 import { connect } from 'react-redux'
 import { Field, reduxForm } from 'redux-form'
-import { Segment, Grid, Header, Form, Button, Container, Divider } from 'semantic-ui-react'
+import { Segment, Grid, Header, Form, Button, Container, Divider, Dropdown } from 'semantic-ui-react'
 import { fetchItem, deleteItem, updateItem } from '../actions/action_item'
 import Map from './Map'
-import QuizOptionDropdown from './QuizOptionDropdown'
+
+let quizOptions = []
 
 class ItemEdit extends Component {
   constructor(props) {
@@ -15,6 +17,8 @@ class ItemEdit extends Component {
   componentWillMount() {
     const { id } = this.props.match.params
     this.props.fetchItem(id)
+    console.log(this.props.quizzes)
+    quizOptions = this.createQuizOptions()
   }
 
   onUpdateClick(values) {
@@ -30,6 +34,18 @@ class ItemEdit extends Component {
     this.props.deleteItem(id, () => {
       this.props.history.push('/items')
     })
+  }
+
+  createQuizOptions() {
+    return _.map(this.props.quizzes, this.createQuizOption)
+  }
+
+  createQuizOption(quiz, key) {
+    return {
+      key: key,
+      value: key,
+      text: quiz.question
+    }
   }
 
   renderTextField(field) {
@@ -63,6 +79,23 @@ class ItemEdit extends Component {
           required
         />
         <div >{touched ? error : ''}</div>
+      </Form.Field>
+    )
+  }
+
+  renderDropdownQuizzesField(props) {
+    return (
+      <Form.Field>
+        <label>Quizzes</label>
+        <Dropdown
+          placeholder="โปรดเลือกแบบทดสอบ"
+          multiple
+          selection
+          {...props.input}
+          options={quizOptions}
+          onChange={(param, data) => props.input.onChange(data.value)}
+          defaultValue={props.selected}
+        />
       </Form.Field>
     )
   }
@@ -133,8 +166,10 @@ class ItemEdit extends Component {
               />
 
               <Field
-                name="quizOptionDropdown"
-                component={QuizOptionDropdown}
+                name="quizzes"
+                component={this.renderDropdownQuizzesField}
+                // options={this.state.options}
+                selected={initialValues.quizzes}
               />
 
               <Divider horizontal />
@@ -211,9 +246,9 @@ function validate(values) {
   return errors
 }
 
-function mapStateToProps({ items }, ownProps) {
+function mapStateToProps({ items, quizzes }, ownProps) {
   const item = items[ownProps.match.params.id]
-  return { initialValues: item }
+  return { initialValues: item, quizzes }
 }
 
 export default connect(mapStateToProps, { fetchItem, deleteItem, updateItem })(
