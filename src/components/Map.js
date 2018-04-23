@@ -19,7 +19,7 @@ const Map = (props) => {
       <MyMapComponent
         googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8vPVbHSptjITeqdM6vbVehA2u30Vu1eo&v=3.exp&libraries=geometry,drawing,places"
         loadingElement={<div style={{ height: '100%' }} />}
-        containerElement={<div style={{ height: '350px', width: '350px' }} />}
+        containerElement={<div style={{ height: '350px', width: '400px' }} />}
         mapElement={<div style={{ height: '100%' }} />}
         isMarkerShown
         {...props}

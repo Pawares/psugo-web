@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
 import { connect } from 'react-redux'
-import { Field, reduxForm } from 'redux-form'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
 import { Segment, Grid, Header, Form, Button, Container, Divider, Dropdown } from 'semantic-ui-react'
 import { fetchItem, deleteItem, updateItem } from '../actions/action_item'
 import Map from './Map'
@@ -83,6 +83,14 @@ class ItemEdit extends Component {
     )
   }
 
+  renderMap(latitude, longitude) {
+    if (latitude && longitude) {
+      return <Map lat={latitude} lng={longitude} />
+    }
+
+    return <div>โปรดป้อนค่าในช่อง latitude และ longitude เพื่อแสดงบนแผนที่</div>
+  }
+
   renderDropdownQuizzesField(props) {
     return (
       <Form.Field>
@@ -107,6 +115,8 @@ class ItemEdit extends Component {
       pristine,
       reset,
       submitting,
+      latitude,
+      longitude
     } = this.props
 
     if (!initialValues) {
@@ -123,7 +133,7 @@ class ItemEdit extends Component {
               onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
             >
               <Container>
-                <Map lat={initialValues.latitude} lng={initialValues.longitude} />
+                {this.renderMap(latitude, longitude)}
               </Container>
               <Divider horizontal >Map</Divider>
               <Field
@@ -251,12 +261,22 @@ function mapStateToProps({ items, quizzes }, ownProps) {
   return { initialValues: item, quizzes }
 }
 
-export default connect(mapStateToProps, { fetchItem, deleteItem, updateItem })(
-  reduxForm({
-    form: 'ItemEditFrom',
-    validate,
-    enableReinitialize: true,
-    keepDirtyOnReinitialize: true,
-  })(ItemEdit)
-)
+ItemEdit = reduxForm({
+  form: 'ItemEditForm',
+  validate,
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true,
+})(ItemEdit)
 
+const selector = formValueSelector('ItemEditForm')
+ItemEdit = connect(
+  (state) => {
+    const { latitude, longitude } = selector(state, 'latitude', 'longitude')
+    return {
+      latitude,
+      longitude
+    }
+  }
+)(ItemEdit)
+
+export default connect(mapStateToProps, { fetchItem, deleteItem, updateItem })(ItemEdit)
