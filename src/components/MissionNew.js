@@ -91,7 +91,6 @@ class MissionNew extends Component {
 
   render() {
     const { handleSubmit } = this.props
-    // this.createItemsMarker()
     return (
       <Segment compact stacked color="orange" >
         <Grid tyle={{ height: '100%' }} >
@@ -177,8 +176,3 @@ MissionNew = connect(
 
 export default connect(mapStateToProps, { createMission })(MissionNew)
 
-
-// export default reduxForm({
-//   form: 'MissionNewForm',
-//   validate
-// })(connect(mapStateToProps, { createMission })(MissionNew))
