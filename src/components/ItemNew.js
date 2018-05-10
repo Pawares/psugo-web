@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
-import { Field, reduxForm } from 'redux-form'
+import _ from 'lodash'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Segment, Grid, Form, Header, Button } from 'semantic-ui-react'
+import { Segment, Grid, Form, Header, Button, Container, Divider, Dropdown } from 'semantic-ui-react'
 import { createItem } from '../actions/action_item'
+import Map from './Map'
+
+let quizOptions = []
 
 class ItemNew extends Component {
+  componentWillMount() {
+    quizOptions = this.createQuizOptions()
+    // console.log(quizOptions)
+  }
+
   onSubmit(values) {
     console.log(values)
     this.props.createItem(values, () => {
@@ -13,23 +22,35 @@ class ItemNew extends Component {
     })
   }
 
+  createQuizOptions() {
+    return _.map(this.props.quizzes, this.createQuizOption)
+  }
+
+  createQuizOption(quiz, key) {
+    return {
+      key: key,
+      value: key,
+      text: quiz.question
+    }
+  }
+
   renderTextField(field) {
     const { label, input, type, meta: { touched, error } } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input {...input} type={type} required />
+        <Form.Input label={label} {...input} type={type} required />
         <div >{touched ? error : ''}</div>
       </Form.Field>
     )
   }
 
   renderNumberField(field) {
-    const { label, input, type, min, max, meta: { touched, error } } = field
+    const { name, label, input, type, min, max, meta: { touched, error } } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input
+        <Form.Input
+          label={label}
+          name={name}
           {...input}
           type={type}
           min={min}
@@ -42,20 +63,47 @@ class ItemNew extends Component {
     )
   }
 
+  renderMap(latitude, longitude) {
+    if (latitude && longitude) {
+      return <Map lat={latitude} lng={longitude} />
+    }
+
+    return <div>โปรดป้อนค่าในช่อง latitude และ longitude เพื่อแสดงบนแผนที่</div>
+  }
+
+  renderDropdownQuizzesField(props) {
+    return (
+      <Form.Field>
+        <label>Quizzes</label>
+        <Dropdown
+          options={quizOptions}
+          multiple
+          selection
+          {...props.input}
+          value={props.input.value}
+          onChange={(param, data) => props.input.onChange(data.value)}
+          placeholder="โปรดเลือกแบบทดสอบ"
+        />
+      </Form.Field>
+    )
+  }
+
   render() {
-    const { handleSubmit } = this.props
+    const { handleSubmit, latitude, longitude } = this.props
     return (
       <Segment compact stacked color="orange" >
         <Grid style={{ height: '100%' }} >
           <Grid.Column style={{ maxWidth: 450 }} >
-            <Header>
-              Item New
-            </Header>
+            <Header as="h2" textAlign="center" >Item New</Header>
 
             <Form
               onSubmit={handleSubmit(this.onSubmit.bind(this))}
-              className="container"
             >
+              <Container>
+                {this.renderMap(latitude, longitude)}
+              </Container>
+              <Divider horizontal>MAP</Divider>
+
               <Field
                 label="Latitude"
                 name="latitude"
@@ -64,6 +112,7 @@ class ItemNew extends Component {
                 max="90"
                 component={this.renderNumberField}
               />
+
               <Field
                 label="Longitude"
                 name="longitude"
@@ -72,12 +121,14 @@ class ItemNew extends Component {
                 max="180"
                 component={this.renderNumberField}
               />
+
               <Field
                 label="Name"
                 name="name"
                 type="text"
                 component={this.renderTextField}
               />
+
               <Field
                 label="Radius(meters)"
                 name="radius"
@@ -86,6 +137,7 @@ class ItemNew extends Component {
                 max="100"
                 component={this.renderNumberField}
               />
+
               <Field
                 label="timeout(hours)"
                 name="timeout"
@@ -94,6 +146,12 @@ class ItemNew extends Component {
                 max="100"
                 component={this.renderNumberField}
               />
+
+              <Field
+                name="quizzes"
+                component={this.renderDropdownQuizzesField}
+              />
+
               <Button type="submit" >Save</Button>
               <Button negative as={Link} to="/items">Cancel</Button>
             </Form>
@@ -144,7 +202,25 @@ function validate(values) {
   return errors
 }
 
-export default reduxForm({
-  form: 'ItemsNewForm',
+
+function mapStateToProps({ quizzes }) {
+  return { quizzes }
+}
+
+ItemNew = reduxForm({
+  form: 'ItemNewForm',
   validate
-})(connect(null, { createItem })(ItemNew))
+})(ItemNew)
+
+const selector = formValueSelector('ItemNewForm')
+ItemNew = connect(
+  (state) => {
+    const { latitude, longitude } = selector(state, 'latitude', 'longitude')
+    return {
+      latitude,
+      longitude
+    }
+  }
+)(ItemNew)
+
+export default connect(mapStateToProps, { createItem })(ItemNew)

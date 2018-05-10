@@ -8,6 +8,7 @@ module.exports = {
         "react/prop-types": 0,
         "jsx-a11y/anchor-is-valid": 0,
         "jsx-a11y/label-has-for": 0,
+        "jsx-a11y/href-no-hash": 0,
         "class-methods-use-this": 0,
         "object-curly-newline": 0,
         "object-shorthand": 0,

@@ -1,21 +1,21 @@
-import { firestore } from '../database/config'
+import { firestore } from '../database/config';
 
-export const FETCH_ITEMS = 'FETCH_ITEMS'
-export const CREATE_ITEM = 'CREATE_ITEM'
-export const FETCH_ITEM = 'FETCH_ITEM'
-export const DELETE_ITEM = 'DELETE_ITEM'
-export const UPDATE_ITEM = 'UPDATE_ITEM'
+export const FETCH_QUIZZES = 'FETCH_QUIZZES'
+export const CREATE_QUIZ = 'CREATE_QUIZ'
+export const FETCH_QUIZ = 'FETCH_QUIZ'
+export const DELETE_QUIZ = 'DELETE_QUIZ'
+export const UPDATE_QUIZ = 'UPDATE_QUIZ'
 
-export function fetchItems() {
+export function fetchQuizzes() {
   return (dispatch) => {
     firestore
-      .collection('items')
+      .collection('quizzes')
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          // console.log(doc.id, " => ", doc.data())
+          // console.log(doc.id, ' => ', doc.data())
           dispatch({
-            type: FETCH_ITEMS,
+            type: FETCH_QUIZZES,
             id: doc.id,
             payload: doc.data()
           })
@@ -27,17 +27,17 @@ export function fetchItems() {
   }
 }
 
-export function createItem(item, callback) {
+export function createQuiz(quiz, callback) {
   return (dispatch) => {
     firestore
-      .collection('items')
-      .add(item)
+      .collection('quizzes')
+      .add(quiz)
       .then((docRef) => {
-        // console.log("Document written with ID: ", docRef.id)
+        console.log('Document written with ID: ', docRef.id)
         dispatch({
-          type: CREATE_ITEM,
+          type: CREATE_QUIZ,
           id: docRef.id,
-          payload: item
+          payload: quiz
         })
         callback()
       })
@@ -47,17 +47,17 @@ export function createItem(item, callback) {
   }
 }
 
-export function fetchItem(id) {
+export function fetchQuiz(id) {
   return (dispatch) => {
     firestore
-      .collection('items')
+      .collection('quizzes')
       .doc(id)
       .get()
       .then((doc) => {
         if (doc.exists) {
-          // console.log("Document data:", doc.data())
+          console.log("Document data:", doc.data())
           dispatch({
-            type: FETCH_ITEM,
+            type: FETCH_QUIZ,
             id: id,
             payload: doc.data()
           })
@@ -66,47 +66,47 @@ export function fetchItem(id) {
         }
       })
       .catch((error) => {
-        console.log(error)
+        console.log('Error getting document:', error)
       })
   }
 }
 
-export function deleteItem(id, callback) {
+export function deleteQuiz(id, callback) {
   return (dispatch) => {
     firestore
-      .collection('items')
+      .collection('quizzes')
       .doc(id)
       .delete()
       .then(() => {
         console.log('Document successfully deleted!')
         dispatch({
-          type: DELETE_ITEM,
+          type: DELETE_QUIZ,
           id: id
         })
         callback()
       })
       .catch((error) => {
-        console.log(error)
+        console.error('Error removing document: ', error)
       })
   }
 }
 
-export function updateItem(id, data, callback) {
+export function updateQuiz(id, data, callback) {
   return (dispatch) => {
     firestore
-      .collection('items')
+      .collection('quizzes')
       .doc(id)
       .set(data)
       .then(() => {
         dispatch({
-          type: UPDATE_ITEM,
+          type: UPDATE_QUIZ,
           id: id,
           payload: data
         })
         callback()
       })
       .catch((error) => {
-        console.log(error)
+        console.error('Error updating document: ', error)
       })
   }
 }

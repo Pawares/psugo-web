@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
+import _ from 'lodash'
 import { connect } from 'react-redux'
-import { Field, reduxForm } from 'redux-form'
-import { Segment, Grid, Header, Form, Button } from 'semantic-ui-react'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
+import { Segment, Grid, Header, Form, Button, Container, Divider, Dropdown } from 'semantic-ui-react'
 import { fetchItem, deleteItem, updateItem } from '../actions/action_item'
-import { parseFromFireItem } from '../utils'
+import Map from './Map'
+
+let quizOptions = []
 
 class ItemEdit extends Component {
   constructor(props) {
@@ -14,6 +17,8 @@ class ItemEdit extends Component {
   componentWillMount() {
     const { id } = this.props.match.params
     this.props.fetchItem(id)
+    console.log(this.props.quizzes)
+    quizOptions = this.createQuizOptions()
   }
 
   onUpdateClick(values) {
@@ -31,27 +36,41 @@ class ItemEdit extends Component {
     })
   }
 
+  createQuizOptions() {
+    return _.map(this.props.quizzes, this.createQuizOption)
+  }
+
+  createQuizOption(quiz, key) {
+    return {
+      key: key,
+      value: key,
+      text: quiz.question
+    }
+  }
+
   renderTextField(field) {
     const {
       label, input, type, meta: { touched, error },
     } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input {...input} type={type} required />
+        <Form.Input
+          label={label}
+          {...input}
+          type={type}
+          required
+        />
         <div >{touched ? error : ''}</div>
       </Form.Field>
     )
   }
 
   renderNumberField(field) {
-    const {
-      label, input, type, min, max, meta: { touched, error },
-    } = field
+    const { label, input, type, min, max, meta: { touched, error } } = field
     return (
       <Form.Field>
-        <label>{label}</label>
-        <input
+        <Form.Input
+          label={label}
           {...input}
           type={type}
           min={min}
@@ -64,6 +83,31 @@ class ItemEdit extends Component {
     )
   }
 
+  renderMap(latitude, longitude) {
+    if (latitude && longitude) {
+      return <Map lat={latitude} lng={longitude} />
+    }
+
+    return <div>โปรดป้อนค่าในช่อง latitude และ longitude เพื่อแสดงบนแผนที่</div>
+  }
+
+  renderDropdownQuizzesField(props) {
+    return (
+      <Form.Field>
+        <label>Quizzes</label>
+        <Dropdown
+          placeholder="โปรดเลือกแบบทดสอบ"
+          multiple
+          selection
+          {...props.input}
+          options={quizOptions}
+          onChange={(param, data) => props.input.onChange(data.value)}
+          defaultValue={props.selected}
+        />
+      </Form.Field>
+    )
+  }
+
   render() {
     const {
       initialValues,
@@ -71,6 +115,8 @@ class ItemEdit extends Component {
       pristine,
       reset,
       submitting,
+      latitude,
+      longitude
     } = this.props
 
     if (!initialValues) {
@@ -81,11 +127,15 @@ class ItemEdit extends Component {
       <Segment stacked compact color="purple" >
         <Grid style={{ height: '100%' }} >
           <Grid.Column style={{ maxWidth: 450 }} >
-            <Header>Item Edit</Header>
+            <Header as="h2" textAlign="center" >Item Edit</Header>
 
             <Form
               onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
             >
+              <Container>
+                {this.renderMap(latitude, longitude)}
+              </Container>
+              <Divider horizontal >Map</Divider>
               <Field
                 label="Latitude"
                 name="latitude"
@@ -125,6 +175,15 @@ class ItemEdit extends Component {
                 component={this.renderNumberField}
               />
 
+              <Field
+                name="quizzes"
+                component={this.renderDropdownQuizzesField}
+                // options={this.state.options}
+                selected={initialValues.quizzes}
+              />
+
+              <Divider horizontal />
+
               <Button
                 primary
                 type="submit"
@@ -140,11 +199,13 @@ class ItemEdit extends Component {
                 Undo Changes
               </Button>
               <Button
+                type="button"
                 negative
                 onClick={this.onDeleteClick}
               >
                 Delete
               </Button>
+
             </Form>
           </Grid.Column>
         </Grid>
@@ -195,18 +256,27 @@ function validate(values) {
   return errors
 }
 
-function mapStateToProps({ items }, ownProps) {
+function mapStateToProps({ items, quizzes }, ownProps) {
   const item = items[ownProps.match.params.id]
-  const parsedItem = parseFromFireItem(item)
-  return { initialValues: parsedItem }
+  return { initialValues: item, quizzes }
 }
 
-export default connect(mapStateToProps, { fetchItem, deleteItem, updateItem })(
-  reduxForm({
-    form: 'ItemEditFrom',
-    validate,
-    enableReinitialize: true,
-    keepDirtyOnReinitialize: true,
-  })(ItemEdit)
-)
+ItemEdit = reduxForm({
+  form: 'ItemEditForm',
+  validate,
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true,
+})(ItemEdit)
 
+const selector = formValueSelector('ItemEditForm')
+ItemEdit = connect(
+  (state) => {
+    const { latitude, longitude } = selector(state, 'latitude', 'longitude')
+    return {
+      latitude,
+      longitude
+    }
+  }
+)(ItemEdit)
+
+export default connect(mapStateToProps, { fetchItem, deleteItem, updateItem })(ItemEdit)

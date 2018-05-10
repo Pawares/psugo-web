@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { Field, reduxForm } from 'redux-form'
+import _ from 'lodash'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
 import { connect } from 'react-redux'
-import { Segment, Grid, Header, Form, Button } from 'semantic-ui-react'
+import { Segment, Grid, Header, Form, Button, Container, Dropdown, Divider } from 'semantic-ui-react'
 import { fetchMission, deleteMission, updateMission } from '../actions/action_mission'
+import MapMarkerCluterer from './MapMarkerCluterer'
 
+let itemOptions = []
+let filteredSelectedItems = []
 
 class MissionEdit extends Component {
   constructor(props) {
@@ -14,6 +18,7 @@ class MissionEdit extends Component {
   componentWillMount() {
     const { id } = this.props.match.params
     this.props.fetchMission(id)
+    itemOptions = this.createItemOptions()
   }
 
   onDeleteClick() {
@@ -30,13 +35,73 @@ class MissionEdit extends Component {
       console.log('Update Successful!')
     })
   }
+
+  createItemOptions() {
+    return _.map(this.props.items, this.createItemOption)
+  }
+
+  createItemOption(item, key) {
+    return {
+      key: key,
+      value: key,
+      text: item.name
+    }
+  }
+
+  createSelectedItemMarkers() {
+    const { items, selectedItems } = this.props
+    console.log('selectedItems', selectedItems)
+    const filteredItems = []
+    _.forEach(items, (item, key) => {
+      _.forEach(selectedItems, (selectedItem) => {
+        if (key === selectedItem) {
+          filteredItems.push(item)
+        }
+      })
+    })
+    console.log('filteredItems', filteredItems)
+    return filteredItems
+  }
+
   renderField(field) {
     const { label, input, type, meta: { touched, error } } = field
     return (
-      <Form.Field required >
-        <label>{label}</label>
-        <input {...input} type={type} required />
+      <Form.Field >
+        <Form.Input
+          fluid
+          label={label}
+          {...input}
+          type={type}
+          required
+        />
         <div>{touched ? error : ''}</div>
+      </Form.Field>
+    )
+  }
+
+  renderMapMarkerCluterer() {
+    filteredSelectedItems = this.createSelectedItemMarkers()
+    if (filteredSelectedItems.length > 0) {
+      return <MapMarkerCluterer markers={filteredSelectedItems} />
+    }
+
+    return <div>โปรดเลือกไอเทม เพื่อแสดงตำแหน่งไอเทมบนแผนที่</div>
+  }
+
+
+  renderDropdownItemsField(props) {
+    return (
+      <Form.Field>
+        <label>Selected Items</label>
+        <Dropdown
+          placeholder="โปรดเลือกไอเทม"
+          multiple
+          selection
+          {...props.input}
+          options={itemOptions}
+          onChange={(param, data) => props.input.onChange(data.value)}
+          defaultValue={props.selected}
+        />
       </Form.Field>
     )
   }
@@ -58,7 +123,7 @@ class MissionEdit extends Component {
       <Segment stacked compact color="purple" >
         <Grid style={{ height: '100%' }} >
           <Grid.Column style={{ maxWidth: 450 }} >
-            <Header>Mission Edit</Header>
+            <Header as="h2" textAlign="center" >Mission Edit</Header>
 
             <Form
               onSubmit={handleSubmit(this.onUpdateClick.bind(this))}
@@ -81,6 +146,17 @@ class MissionEdit extends Component {
                 type="text"
                 component={this.renderField}
               />
+
+              <Container>
+                {this.renderMapMarkerCluterer()}
+              </Container>
+              <Divider horizontal >Map</Divider>
+
+              <Field
+                name="selectedItems"
+                component={this.renderDropdownItemsField}
+                selected={initialValues.items}
+              />
               <Button
                 primary
                 type="submit"
@@ -96,6 +172,7 @@ class MissionEdit extends Component {
                 Undo Changes
               </Button>
               <Button
+                type="button"
                 negative
                 onClick={this.onDeleteClick}
               >
@@ -104,7 +181,6 @@ class MissionEdit extends Component {
             </Form>
           </Grid.Column>
         </Grid>
-        {/* <Link to="/missions">Back to Missions</Link> */}
       </Segment>
 
     )
@@ -128,15 +204,25 @@ function validate(values) {
 
   return errors
 }
-function mapStateToProps({ missions }, ownProps) {
-  return { initialValues: missions[ownProps.match.params.id] }
+function mapStateToProps({ missions, items }, ownProps) {
+  return { initialValues: missions[ownProps.match.params.id], items }
 }
 
-export default connect(mapStateToProps, { fetchMission, deleteMission, updateMission })(
-  reduxForm({
-    form: 'MissionEditForm',
-    validate,
-    enableReinitialize: true,
-    keepDirtyOnReinitialize: true
-  })(MissionEdit)
-)
+MissionEdit = reduxForm({
+  form: 'MissionEditForm',
+  validate,
+  enableReinitialize: true,
+  keepDirtyOnReinitialize: true
+})(MissionEdit)
+
+const selector = formValueSelector('MissionEditForm')
+MissionEdit = connect(
+  (state) => {
+    const selectedItems = selector(state, 'selectedItems')
+    return {
+      selectedItems
+    }
+  }
+)(MissionEdit)
+
+export default connect(mapStateToProps, { fetchMission, deleteMission, updateMission })(MissionEdit)

@@ -20,10 +20,8 @@ class MissionList extends Component {
             <Card.Description>{mission.statement}</Card.Description>
           </Card.Content>
           <Card.Content extra>
-            <a>
-              <Icon name="user" />
-              10 players
-            </a>
+            <Icon name="user" />
+            10 players
           </Card.Content>
         </Card>
       )

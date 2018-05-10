@@ -2,8 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import store from './store'
 import { Container } from 'semantic-ui-react'
+import store from './store'
+
 
 import './styles/stylesheet.css'
 import App from './components/App'
@@ -13,6 +14,9 @@ import MissionEdit from './components/MissionEdit'
 import ItemList from './components/ItemList'
 import ItemNew from './components/ItemNew'
 import ItemEdit from './components/ItemEdit'
+import QuizList from './components/QuizList'
+import QuizNew from './components/QuizNew'
+import QuizEdit from './components/QuizEdit'
 import NavBar from './components/NavBar'
 
 ReactDOM.render(
@@ -22,6 +26,9 @@ ReactDOM.render(
         <NavBar />
         <Container>
           <Switch>
+            <Route path="/quizzes/new" component={QuizNew} />
+            <Route path="/quizzes/:id" component={QuizEdit} />
+            <Route path="/quizzes" component={QuizList} />
             <Route path="/items/new" component={ItemNew} />
             <Route path="/items/:id" component={ItemEdit} />
             <Route path="/items" component={ItemList} />
@@ -31,7 +38,6 @@ ReactDOM.render(
             <Route exact path="/" component={App} />
           </Switch>
         </Container>
-
       </div>
     </BrowserRouter>
   </Provider>,
