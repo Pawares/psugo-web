@@ -63,7 +63,7 @@ class QuizNew extends Component {
     return (
       <Segment compact stacked color="orange" >
         <Grid style={{ height: '100%' }} >
-          <Grid.Column style={{ width: 450 }} >
+          <Grid.Column style={{ width: 350 }} >
             <Header as="h2" textAlign="center">Quiz New</Header>
 
             <Form
